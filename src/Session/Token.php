@@ -13,22 +13,54 @@ namespace Sabinus\TuyaCloudApi\Session;
 class Token
 {
 
+    /**
+     * Jeton principal
+     * 
+     * @param String
+     */
 	private $tokenAccess;
 
+    /**
+     * Jeton pour la rafraichissement
+     * 
+     * @param String
+     */
     private $tokenRefresh;
 
+    /**
+     * Temps d'expiration en secondes
+     * 
+     * @param Integer
+     */
     private $expireTime;
 
 
-	
 
-
+    /**
+     * Retourne la valeur du jeton
+     * 
+     * @return String
+     */
     public function get()
     {
         return $this->tokenAccess;
     }
 
+    
+    /**
+     * Retourne le jeton de rafraichissement
+     * 
+     * @return String
+     */
+    public function getTokenRefresh()
+    {
+        return $this->tokenRefresh;
+    }
 
+
+    /**
+     * Affecte les données du jeton retourné dans l'objet
+     */
     public function set(array $data)
     {
         $this->tokenAccess = $data['access_token'];
@@ -37,6 +69,11 @@ class Token
     }
 
 
+    /**
+     * S'il y a un jeton
+     * 
+     * @return Boolean
+     */
     public function has()
     {
         if ( $this->tokenAccess && $this->tokenRefresh && $this->expireTime )
@@ -45,12 +82,15 @@ class Token
             return false;
     }
 
+    
+    /**
+     * Si le jeton est encore valide
+     * 
+     * @return Boolean
+     */
     public function isValid()
     {
         return time() + $this->expireTime > time();
     }
-
-    
-
 
 }

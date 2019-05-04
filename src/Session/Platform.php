@@ -15,6 +15,9 @@ use GuzzleHttp\Psr7\Uri;
 class Platform
 {
 
+    /**
+     * Masque de la base URL de la plateforme
+     */
 	const BASE_URL_FORMAT = 'https://px1.tuya%s.com';
 
 	/**
@@ -47,7 +50,13 @@ class Platform
     private $region;
 
     
-
+    
+    /**
+     * Constructeur
+     * 
+     * @param String $biztype : Type de la plateforme
+     * @param String $region  : Region de la plateforme à utiliser
+     */
     public function __construct($biztype, $region = self::EU)
     {
         $this->biztype = ($biztype) ? $biztype : self::TUYA;
@@ -55,18 +64,33 @@ class Platform
     }
 
 
+    /**
+     * Returne le type de la plateforme
+     * 
+     * @return String
+     */
     public function getBizType()
     {
     	return $this->biztype;
     }
 
 
-    public function getRegion()
+    /**
+     * Retourne la base URL en fonction de la région
+     * 
+     * @return Uri
+     */
+    public function getBaseUrl()
     {
-        return $this->region;
+        return new Uri(sprintf(self::BASE_URL_FORMAT, $this->region));
     }
 
-
+    
+    /**
+     * Affecte la région en fonction du token
+     * 
+     * @param String $token
+     */
     public function setRegionFromToken($token)
     {
         $prefix = substr($token, 0, 2);
@@ -77,12 +101,5 @@ class Platform
             case 'US' : $this->region = self::US; break;
         }
     }
-
-
-    public function getBaseUrl()
-    {
-        return new Uri(sprintf(self::BASE_URL_FORMAT, $this->region));
-    }
-
 
 }
