@@ -38,10 +38,10 @@ class TuyaCloudApi
     {
         $response = $this->_request('Discovery', 'discovery');
 
-        //var_dump($response['payload']['devices']);
+        //print_r($response['payload']['devices']);
         $this->devices = array();
         foreach ($response['payload']['devices'] as $datas) {
-            $this->devices[] = DeviceFactory::createDevice($datas);
+            $this->devices[] = DeviceFactory::createDeviceFromDatas($datas);
         }
         //var_dump($this->devices);
         return $this->devices;
