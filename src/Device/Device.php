@@ -12,9 +12,7 @@ namespace Sabinus\TuyaCloudApi\Device;
 
 abstract class Device
 {
-
-    protected $api;
-    
+   
     /**
      * @var String
      */
@@ -41,15 +39,12 @@ abstract class Device
     //protected $isOnline;
 
 
-    public function __construct(array $datas, $api)
+    public function __construct(array $datas)
     {
         $this->id = $datas['id'];
         $this->type = $datas['dev_type'];
         $this->name = $datas['name'];
         $this->icon = $datas['icon'];
-
-        $this->api = $api;
-        
     }
 
 
