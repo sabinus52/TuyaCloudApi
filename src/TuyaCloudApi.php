@@ -10,6 +10,7 @@
 namespace Sabinus\TuyaCloudApi;
 
 use Sabinus\TuyaCloudApi\Session\Session;
+use Sabinus\TuyaCloudApi\Device\DeviceFactory;
 use GuzzleHttp\Psr7\Uri;
 
 
@@ -22,7 +23,8 @@ class TuyaCloudApi
      * @var Session
      */
     private $session;
-
+    
+    private $devices;
     
     public function __construct(Session $session)
     {
@@ -34,7 +36,25 @@ class TuyaCloudApi
     public function discoverDevices(Type $var = null)
     {
         $response = $this->_request('Discovery', 'discovery');
+
         var_dump($response['payload']['devices']);
+        $this->devices = array();
+        foreach ($response['payload']['devices'] as $datas) {
+            $this->devices[] = DeviceFactory::createDevice($this, $datas);
+        }
+        var_dump($this->devices);
+
+        
+    }
+
+
+    public function getDeviceById($id)
+    {
+        foreach ($this->devices as $device) {
+            if ($device->getId() == $id)
+                return $device;
+        }
+        return null;
     }
 
 
