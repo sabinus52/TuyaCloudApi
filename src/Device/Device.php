@@ -9,6 +9,8 @@
 
 namespace Sabinus\TuyaCloudApi\Device;
 
+use Sabinus\TuyaCloudApi\TuyaCloudApi;
+
 
 abstract class Device
 {
@@ -127,6 +129,21 @@ abstract class Device
     public function isOnline()
     {
         return $this->data['online'];
+    }
+
+
+    /**
+     * Mise à jour des données de l'équipement
+     * 
+     * @param TuyaCloudApi $api
+     * @return Array
+     */
+    public function update(TuyaCloudApi $api)
+    {
+        sleep(1);
+        $response = $api->controlDevice($this->id, 'QueryDevice', array(), 'query');
+        $this->setData($response['payload']['data']);
+        return true;
     }
 
 }
