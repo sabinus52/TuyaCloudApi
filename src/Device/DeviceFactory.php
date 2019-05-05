@@ -17,6 +17,7 @@ class DeviceFactory
      * Types des différents devices
      */
     const SWITCH = 'switch';
+    const COVER  = 'cover';
 
     
     /**
@@ -30,6 +31,10 @@ class DeviceFactory
         switch ($datas['dev_type']) {
             case self::SWITCH :
                 $device = new SwitchDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device->setData($datas['data']);
+                break;
+            case self::COVER :
+                $device = new CoverDevice($datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 break;
             default:
@@ -52,6 +57,9 @@ class DeviceFactory
         switch ($type) {
             case self::SWITCH :
                 $device = new SwitchDevice($datas['id']);
+                break;
+            case self::COVER :
+                $device = new CoverDevice($datas['id']);
                 break;
             default:
                 return null;
