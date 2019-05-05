@@ -18,6 +18,7 @@ class DeviceFactory
      */
     const SWITCH = 'switch';
     const COVER  = 'cover';
+    const SCENE  = 'scene';
 
     
     /**
@@ -35,6 +36,10 @@ class DeviceFactory
                 break;
             case self::COVER :
                 $device = new CoverDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device->setData($datas['data']);
+                break;
+            case self::SCENE :
+                $device = new SceneDevice($datas['id'], $datas['name']);
                 $device->setData($datas['data']);
                 break;
             default:
@@ -60,6 +65,9 @@ class DeviceFactory
                 break;
             case self::COVER :
                 $device = new CoverDevice($datas['id']);
+                break;
+            case self::SCENE :
+                $device = new SceneDevice($datas['id']);
                 break;
             default:
                 return null;
