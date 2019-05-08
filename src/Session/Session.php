@@ -136,7 +136,7 @@ class Session
                 'from'        => 'tuya',
             ),
         ));
-        print 'CREATE : '.$response->getBody()."\n";
+        //print 'CREATE : '.$response->getBody()."\n";
         $response = json_decode((string) $response->getBody(), true); // TODO gestion erreur
 
         // Affecte le résultat dans le token
@@ -160,7 +160,7 @@ class Session
                 'refresh_token' => $this->token->getTokenRefresh(),
             ),
         ));
-        print 'REFRESH : '.$response->getBody()."\n";
+        //print 'REFRESH : '.$response->getBody()."\n";
         $response = json_decode((string) $response->getBody(), true); // TODO gestion erreur
 
         // Affecte le résultat dans le token
