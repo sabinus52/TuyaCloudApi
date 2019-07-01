@@ -14,7 +14,7 @@
     "require": {
         "php": "^5.2||^7",
         "guzzlehttp/guzzle": "~6",
-        "mexitek/phpcolors": "dev-master"
+        "mexitek/phpcolors": "*"
     },
     "autoload": {
         "psr-4" : {
