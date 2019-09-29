@@ -16,11 +16,11 @@ class DeviceFactory
     /**
      * Types des différents devices
      */
-    const UNKNOW = 'unknow';
-    const SWITCH = 'switch';
-    const LIGHT  = 'light';
-    const COVER  = 'cover';
-    const SCENE  = 'scene';
+    const UNKNOWN = 'unknown';
+    const SWITCH  = 'switch';
+    const LIGHT   = 'light';
+    const COVER   = 'cover';
+    const SCENE   = 'scene';
 
     
     /**
@@ -49,7 +49,7 @@ class DeviceFactory
                 $device->setData($datas['data']);
                 break;
             default:
-                $device = new UnknowDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new UnknownDevice($datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 $device->setDevType($datas['dev_type']);
                 break;
