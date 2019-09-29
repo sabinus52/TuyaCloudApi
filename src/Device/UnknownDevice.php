@@ -12,7 +12,7 @@ namespace Sabinus\TuyaCloudApi\Device;
 use Sabinus\TuyaCloudApi\TuyaCloudApi;
 
 
-class UnknowDevice extends Device implements DeviceInterface
+class UnknownDevice extends Device implements DeviceInterface
 {
 
     /**
@@ -29,7 +29,7 @@ class UnknowDevice extends Device implements DeviceInterface
     public function __construct($id, $name = '', $icon = '')
     {
         parent::__construct($id, $name, $icon);
-        $this->type = DeviceFactory::UNKNOW;
+        $this->type = DeviceFactory::UNKNOWN;
     }
 
 
