@@ -192,8 +192,11 @@ class Session
      * @param String $message : Message par défaut
      * @throws Exception
      */
-    public function checkResponse(array $response, $message = null)
+    public function checkResponse($response, $message = null)
     {
+        if ( empty($response) ) {
+            throw new \Exception($message.' : Datas return null');
+        }
         if ( isset($response['responseStatus']) && $response['responseStatus'] === 'error' ) {
             $message = isset($response['errorMsg']) ? $response['errorMsg'] : $message;
             throw new \Exception($message);
