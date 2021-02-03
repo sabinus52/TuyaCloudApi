@@ -110,7 +110,7 @@ class Session
      */
     public function getToken()
     {
-        $this->token = $this->tokenPool->fetchTokenFromCache();
+        $this->token = $this->tokenPool->fetchFromCache(9999999);
 
         if ( is_null($this->token) ) {
             // Pas de token sauvegardé sur le FS
@@ -178,7 +178,7 @@ class Session
 
         // Affecte le résultat dans le token et le sauvegarde
         $this->token->set($response);
-        $this->tokenPool->storeTokenInCache($this->token);
+        $this->tokenPool->storeInCache($this->token);
 
         // La valeur du token retoune la region pour indiquer sur quelle plateforme, on doit se connecter
         $this->platform->setRegionFromToken($this->token->get());
@@ -204,7 +204,7 @@ class Session
 
         // Affecte le résultat dans le token
         $this->token->set($response);
-        $this->tokenPool->storeTokenInCache($this->token);
+        $this->tokenPool->storeInCache($this->token);
     }
 
 

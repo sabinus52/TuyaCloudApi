@@ -17,11 +17,15 @@ class TokenPoolTest extends TestCase
     public function testStoreToken()
     {
         $pool = new TokenPool();
-        $this->assertSame(null, $pool->fetchTokenFromCache());
-        $pool->storeTokenInCache([0,1,2]);
-        $this->assertSame([0,1,2], $pool->fetchTokenFromCache());
         $pool->clearFromCache();
-        $this->assertSame(null, $pool->fetchTokenFromCache());
+        $this->assertSame(null, $pool->fetchFromCache());
+        $pool->storeInCache([0,1,2]);
+        $this->assertSame(null, $pool->fetchFromCache(0));
+        $this->assertSame([0,1,2], $pool->fetchFromCache(3)); // Non périmé
+        sleep(5);
+        $this->assertSame(null, $pool->fetchFromCache(3)); // Périmé
+        $pool->clearFromCache();
+        $this->assertSame(null, $pool->fetchFromCache(3));
     }
 
 
@@ -29,10 +33,12 @@ class TokenPoolTest extends TestCase
     {
         $pool = new TokenPool();
         $pool->setFolder('/var/tmp');
-        $pool->storeTokenInCache([1,2,3]);
-        $this->assertSame([1,2,3], $pool->fetchTokenFromCache());
         $pool->clearFromCache();
-        $this->assertSame(null, $pool->fetchTokenFromCache());
+        $pool->storeInCache([1,2,3]);
+        $this->assertSame(null, $pool->fetchFromCache());
+        $this->assertSame([1,2,3], $pool->fetchFromCache(3));
+        $pool->clearFromCache();
+        $this->assertSame(null, $pool->fetchFromCache());
     }
 
 }
