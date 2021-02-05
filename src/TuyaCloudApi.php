@@ -43,6 +43,18 @@ class TuyaCloudApi
 
 
     /**
+     * Vérifie la connexion
+     * 
+     * @return Boolean
+     */
+    public function checkConnection()
+    {
+        $token = $this->session->getToken();
+        return ( $token ) ? true : false;
+    }
+
+
+    /**
      * Recherche tous les équipements disponibles pour cette session
      * 
      * @return Array|Boolean
