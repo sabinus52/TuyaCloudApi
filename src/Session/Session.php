@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
 use Sabinus\TuyaCloudApi\Tools\TokenPool;
+use Sabinus\TuyaCloudApi\Tools\DiscoveryPool;
 
 
 class Session
@@ -22,6 +23,11 @@ class Session
      * Timeout des requêtes HTTP
      */
     const TIMEOUT = 2.0;
+
+    /**
+     * Délai entre 2 requêtes de découverte (restriction Tuya)
+     */
+    const DELAY_DISCOVERY = 600;
 
 
     /**
@@ -74,6 +80,13 @@ class Session
     private $tokenPool;
 
     /**
+     * Pool de la découverte
+     * 
+     * @var DiscoveryPool
+     */
+    private $discoveryPool;
+
+    /**
      * Valeur du timeout en secondes
      * 
      * @var Float
@@ -98,6 +111,7 @@ class Session
         $this->platform = new Platform($biztype);
         $this->token = new Token();
         $this->tokenPool = new TokenPool();
+        $this->discoveryPool = new DiscoveryPool();
         $this->timeout = $timeout;
         $this->client = $this->_createClient();
     }
@@ -129,6 +143,28 @@ class Session
             $this->_refreshToken();
         }
         return $this->token->get();
+    }
+
+
+    /**
+     * Retourne le résultat de la requête de type "discovery" si elle est en cache et non périmée
+     * 
+     * @return Array
+     */
+    public function getDiscoveryRequest()
+    {
+        return $this->discoveryPool->fetchFromCache(self::DELAY_DISCOVERY);
+    }
+
+
+    /**
+     * Marque et enregistre le timestamp de la dernière découverte demandée
+     * 
+     * @param Array $response : Réponse de la requête de découverte
+     */
+    public function setPointDiscovery(array $response)
+    {
+        $this->discoveryPool->storeInCache($response);
     }
 
 

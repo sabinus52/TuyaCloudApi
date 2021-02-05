@@ -45,19 +45,23 @@ class TuyaCloudApi
     /**
      * Recherche tous les équipements disponibles pour cette session
      * 
-     * @return Array
+     * @return Array|Boolean
      */
     public function discoverDevices()
     {
         $response = $this->_request('Discovery', 'discovery');
 
-        //print_r($response['payload']['devices']);
+        // Si problème ou bien trop de requête à la suite
+        if ( ! isset($response['payload']['devices']) ) {
+            throw new \Exception('Problème ou trop de requête de découverte effectuée. Attendre 10 min avant de refaire une nouvelle découverte');
+        }
+
         $this->devices = array();
         foreach ($response['payload']['devices'] as $datas) {
             $this->devices[] = DeviceFactory::createDeviceFromDatas($datas);
         }
+
         return $this->devices;
-       
     }
 
 
@@ -118,7 +122,13 @@ class TuyaCloudApi
     {
         $token = $this->session->getToken();
         if (!$token) return null;
-        
+
+        // Si mode découverte limité à une seule intérrogation toutes les X minutes
+        if ( $namespace == 'discovery' ) {
+            $discovery = $this->session->getDiscoveryRequest();
+            if ( $discovery != null ) return $discovery;
+        }
+
         $response = $this->session->getClient()->post(new Uri('/homeassistant/skill'), array(
             'json' => array(
                 'header' => array(
@@ -133,6 +143,11 @@ class TuyaCloudApi
         ));
         $response = json_decode((string) $response->getBody(), true);
         $this->session->checkResponse($response, sprintf('Failed to get "%s" response from Cloud Tuya', $name));
+
+        // Si mode découverte limité à une seule intérrogation toutes les X minutes
+        if ( $namespace == 'discovery' ) {
+            $this->session->setPointDiscovery($response);
+        }
 
         return $response;
     }
