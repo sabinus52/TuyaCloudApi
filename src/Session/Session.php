@@ -24,12 +24,6 @@ class Session
     const TIMEOUT = 2.0;
 
     /**
-     * Délai entre 2 requêtes de découverte (restriction Tuya)
-     */
-    const DELAY_DISCOVERY = 600;
-
-
-    /**
      * Utilisateur de connection
      * 
      * @var String
@@ -79,13 +73,6 @@ class Session
     private $tokenPool;
 
     /**
-     * Pool de la découverte
-     * 
-     * @var CachePool
-     */
-    private $discoveryPool;
-
-    /**
      * Valeur du timeout en secondes
      * 
      * @var Float
@@ -109,8 +96,7 @@ class Session
         $this->countryCode = $country;
         $this->platform = new Platform($biztype);
         $this->token = new Token();
-        $this->tokenPool = new CachePool('tuya.token');
-        $this->discoveryPool = new CachePool('tuya.discovery');
+        $this->tokenPool = new CachePool(Token::CACHE_FILE);
         $this->timeout = $timeout;
         $this->client = $this->_createClient();
     }
@@ -123,7 +109,7 @@ class Session
      */
     public function getToken()
     {
-        $this->token = $this->tokenPool->fetchFromCache(9999999);
+        $this->token = $this->tokenPool->fetchFromCache(Token::CACHE_DELAY);
 
         if ( is_null($this->token) ) {
             // Pas de token sauvegardé sur le FS
@@ -142,28 +128,6 @@ class Session
             $this->_refreshToken();
         }
         return $this->token->get();
-    }
-
-
-    /**
-     * Retourne le résultat de la requête de type "discovery" si elle est en cache et non périmée
-     * 
-     * @return Array
-     */
-    public function getDiscoveryRequest()
-    {
-        return $this->discoveryPool->fetchFromCache(self::DELAY_DISCOVERY);
-    }
-
-
-    /**
-     * Marque et enregistre le timestamp de la dernière découverte demandée
-     * 
-     * @param Array $response : Réponse de la requête de découverte
-     */
-    public function setPointDiscovery(array $response)
-    {
-        $this->discoveryPool->storeInCache($response);
     }
 
 
@@ -240,25 +204,6 @@ class Session
         // Affecte le résultat dans le token
         $this->token->set($response);
         $this->tokenPool->storeInCache($this->token);
-    }
-
-
-    /**
-     * Vérifie si pas d'erreur dans le retour de la requête
-     * 
-     * @param Array $response : Réponse de la requete http
-     * @param String $message : Message par défaut
-     * @throws Exception
-     */
-    public function checkResponse($response, $message = null)
-    {
-        if ( empty($response) ) {
-            throw new \Exception($message.' : Datas return null');
-        }
-        if ( isset($response['responseStatus']) && $response['responseStatus'] === 'error' ) {
-            $message = isset($response['errorMsg']) ? $response['errorMsg'] : $message;
-            throw new \Exception($message);
-        }
     }
 
 

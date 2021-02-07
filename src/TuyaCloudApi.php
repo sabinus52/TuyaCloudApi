@@ -11,8 +11,10 @@ namespace Sabinus\TuyaCloudApi;
 
 use Sabinus\TuyaCloudApi\Session\Session;
 use Sabinus\TuyaCloudApi\Device\Device;
-use Sabinus\TuyaCloudApi\Device\DeviceFactory;
 use Sabinus\TuyaCloudApi\Device\DeviceEvent;
+use Sabinus\TuyaCloudApi\Request\DiscoveryRequest;
+use Sabinus\TuyaCloudApi\Request\ControlRequest;
+use Sabinus\TuyaCloudApi\Request\QueryRequest;
 use GuzzleHttp\Psr7\Uri;
 
 
@@ -61,18 +63,10 @@ class TuyaCloudApi
      */
     public function discoverDevices()
     {
-        $response = $this->_request('Discovery', 'discovery');
+        $reqDiscovery = new DiscoveryRequest($this->session);
+        $reqDiscovery->request();
 
-        // Si problème ou bien trop de requête à la suite
-        if ( ! isset($response['payload']['devices']) ) {
-            throw new \Exception('Problème ou trop de requête de découverte effectuée. Attendre 10 min avant de refaire une nouvelle découverte');
-        }
-
-        $this->devices = array();
-        foreach ($response['payload']['devices'] as $datas) {
-            $this->devices[] = DeviceFactory::createDeviceFromDatas($datas);
-        }
-
+        $this->devices = $reqDiscovery->fetchDevices();
         return $this->devices;
     }
 
@@ -105,7 +99,32 @@ class TuyaCloudApi
     public function controlDevice($id, $action, array $payload = [], $namespace = 'control')
     {
         $payload['devId'] = $id;
-        return $this->_request($action, $namespace, $payload);
+        switch ($namespace) {
+            case 'query' :
+                $req = new QueryRequest($this->session);
+                break;
+            case 'control' :
+            default :
+                $req = new ControlRequest($this->session);
+                break;
+        }
+
+        return $req->request($action, $namespace, $payload);
+    }
+
+
+    /**
+     * Envoi une requête de query de l'équipement
+     * 
+     * @param String $id        : Identifiant du device
+     * @return QueryRequest
+     */
+    public function getQueryDevice($id)
+    {
+        $payload['devId'] = $id;
+        $query = new QueryRequest($this->session);
+        $query->request('QueryDevice', 'query', $payload);
+        return $query;
     }
 
 
@@ -118,50 +137,16 @@ class TuyaCloudApi
      */
     public function sendEvent(DeviceEvent $event, $namespace = 'control')
     {
-        return $this->_request($event->getAction(), $namespace, $event->getPayload());
-    }
-
-
-    /**
-     * Effectue une requête HTTP dans le Cloud Tuya
-     * 
-     * @param String $name      : Valeur de l'action à effectuer
-     * @param String $namespace : Espace de nom
-     * @param Array  $payload   : Données à envoyer
-     * @return Array
-     */
-    private function _request($name, $namespace, array $payload = [])
-    {
-        $token = $this->session->getToken();
-        if (!$token) return null;
-
-        // Si mode découverte limité à une seule intérrogation toutes les X minutes
-        if ( $namespace == 'discovery' ) {
-            $discovery = $this->session->getDiscoveryRequest();
-            if ( $discovery != null ) return $discovery;
+        switch ($namespace) {
+            case 'query' :
+                $req = new QueryRequest($this->session);
+                break;
+            case 'control' :
+            default :
+                $req = new ControlRequest($this->session);
+                break;
         }
-
-        $response = $this->session->getClient()->post(new Uri('/homeassistant/skill'), array(
-            'json' => array(
-                'header' => array(
-                    'name'           => $name,
-                    'namespace'      => $namespace,
-                    'payloadVersion' => 1,
-                ),
-                    'payload' => $payload + array(
-                    'accessToken'    => $token,
-                ),
-            ),
-        ));
-        $response = json_decode((string) $response->getBody(), true);
-        $this->session->checkResponse($response, sprintf('Failed to get "%s" response from Cloud Tuya', $name));
-
-        // Si mode découverte limité à une seule intérrogation toutes les X minutes
-        if ( $namespace == 'discovery' ) {
-            $this->session->setPointDiscovery($response);
-        }
-
-        return $response;
+        return $req->request($event->getAction(), $namespace, $event->getPayload());
     }
 
 }
