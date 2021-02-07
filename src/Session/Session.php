@@ -12,8 +12,7 @@ namespace Sabinus\TuyaCloudApi\Session;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\Psr7\UriResolver;
-use Sabinus\TuyaCloudApi\Tools\TokenPool;
-use Sabinus\TuyaCloudApi\Tools\DiscoveryPool;
+use Sabinus\TuyaCloudApi\Tools\CachePool;
 
 
 class Session
@@ -75,14 +74,14 @@ class Session
     /**
      * Pool du jeton de connexion Tuya
      * 
-     * @var TokenPool
+     * @var CachePool
      */
     private $tokenPool;
 
     /**
      * Pool de la découverte
      * 
-     * @var DiscoveryPool
+     * @var CachePool
      */
     private $discoveryPool;
 
@@ -110,8 +109,8 @@ class Session
         $this->countryCode = $country;
         $this->platform = new Platform($biztype);
         $this->token = new Token();
-        $this->tokenPool = new TokenPool();
-        $this->discoveryPool = new DiscoveryPool();
+        $this->tokenPool = new CachePool('tuya.token');
+        $this->discoveryPool = new CachePool('tuya.discovery');
         $this->timeout = $timeout;
         $this->client = $this->_createClient();
     }

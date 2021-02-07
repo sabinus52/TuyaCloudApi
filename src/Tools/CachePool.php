@@ -9,7 +9,8 @@
 
 namespace Sabinus\TuyaCloudApi\Tools;
 
-abstract class Pool
+
+class CachePool
 {
 
     /**
@@ -32,8 +33,9 @@ abstract class Pool
      * 
      * @param String $folder
      */
-    public function __construct($folder = null)
+    public function __construct($filename, $folder = null)
     {
+        $this->filename = $filename;
         $this->folder = (empty($folder)) ? sys_get_temp_dir() : $folder;
     }
 

@@ -8,15 +8,15 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use Sabinus\TuyaCloudApi\Tools\TokenPool;
+use Sabinus\TuyaCloudApi\Tools\CachePool;
 
 
-class TokenPoolTest extends TestCase
+class CachePoolTest extends TestCase
 {
 
-    public function testStoreToken()
+    public function testStoreCache()
     {
-        $pool = new TokenPool();
+        $pool = new CachePool('cachepool.test');
         $pool->clearFromCache();
         $this->assertSame(null, $pool->fetchFromCache());
         $pool->storeInCache([0,1,2]);
@@ -29,9 +29,9 @@ class TokenPoolTest extends TestCase
     }
 
 
-    public function testStoreOtherFolderToken()
+    public function testStoreOtherFolderCache()
     {
-        $pool = new TokenPool();
+        $pool = new CachePool('cachepool.test');
         $pool->setFolder('/var/tmp');
         $pool->clearFromCache();
         $pool->storeInCache([1,2,3]);
