@@ -9,6 +9,8 @@
 
 namespace Sabinus\TuyaCloudApi\Device;
 
+use Sabinus\TuyaCloudApi\Session\Session;
+
 
 class DeviceFactory
 {
@@ -38,34 +40,35 @@ class DeviceFactory
     /**
      * Créer l'objet de l'équipement à partir des données reçus par la découverte des devices
      * 
+     * @param Session $session
      * @param Array $datas
      * @return Device
      */
-    static public function createDeviceFromDatas(array $datas)
+    static public function createDeviceFromDatas(Session $session, array $datas)
     {
         switch ($datas['dev_type']) {
             case self::TUYA_SWITCH :
-                $device = new SwitchDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new SwitchDevice($session, $datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 break;
             case self::TUYA_LIGHT :
-                $device = new LightDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new LightDevice($session, $datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 break;
             case self::TUYA_COVER :
-                $device = new CoverDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new CoverDevice($session, $datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 break;
             case self::TUYA_SCENE :
-                $device = new SceneDevice($datas['id'], $datas['name']);
+                $device = new SceneDevice($session, $datas['id'], $datas['name']);
                 $device->setData($datas['data']);
                 break;
             case self::TUYA_CLIMATE :
-                $device = new ClimateDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new ClimateDevice($session, $datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 break;
             default:
-                $device = new UnknownDevice($datas['id'], $datas['name'], $datas['icon']);
+                $device = new UnknownDevice($session, $datas['id'], $datas['name'], $datas['icon']);
                 $device->setData($datas['data']);
                 $device->setDevType($datas['dev_type']);
                 break;

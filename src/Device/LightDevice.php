@@ -9,7 +9,7 @@
 
 namespace Sabinus\TuyaCloudApi\Device;
 
-use Sabinus\TuyaCloudApi\TuyaCloudApi;
+use Sabinus\TuyaCloudApi\Session\Session;
 
 
 class LightDevice extends Device implements DeviceInterface
@@ -18,9 +18,9 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Constructeur
      */
-    public function __construct($id, $name = '', $icon = '')
+    public function __construct(Session $session, $id, $name = '', $icon = '')
     {
-        parent::__construct($id, $name, $icon);
+        parent::__construct($session, $id, $name, $icon);
         $this->type = DeviceFactory::TUYA_LIGHT;
     }
 
@@ -132,12 +132,11 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Allume la lampe
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
-    public function turnOn(TuyaCloudApi $api)
+    public function turnOn()
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 1));
+        return $this->control('turnOnOff', array('value' => 1));
     }
 
 
@@ -154,12 +153,11 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Eteins la lampe
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
-    public function turnOff(TuyaCloudApi $api)
+    public function turnOff()
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 0));
+        return $this->control('turnOnOff', array('value' => 0));
     }
 
     
@@ -177,13 +175,12 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Affecte la luminosité
      * 
-     * @param TuyaCloudApi $api
      * @param Integer $value : Valeur de la luminosité en pourcentage (%)
      * @return Array
      */
-    public function setBrightness(TuyaCloudApi $api, $value)
+    public function setBrightness($value)
     {
-        return $api->controlDevice($this->id, 'brightnessSet', array('value' => $value));
+        return $this->control('brightnessSet', array('value' => $value));
     }
 
 
@@ -208,19 +205,18 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Affecte une couleur
      * 
-     * @param TuyaCloudApi $api
      * @param Integer $color
      * @param Integer $saturation : Saturation en pourcentage (%)
      * @return Array
      */
-    public function setColor(TuyaCloudApi $api, $color, $saturation, $brightness = 0)
+    public function setColor($color, $saturation, $brightness = 0)
     {
         $hsv = array();
         $hsv['hue'] = $color;
         $hsv['saturation'] = round($saturation * 255 / 100); // 0-255
         $hsv['brightness'] = $brightness; // N'a pas l'air de fonctionner mais obligatoire
         if ($saturation == 0) $hsv['hue'] = 0;
-        return $api->controlDevice($this->id, 'colorSet', array('color' => $hsv));
+        return $this->control('colorSet', array('color' => $hsv));
     }
 
 
@@ -238,13 +234,12 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Affecte la température de la lumière
      * 
-     * @param TuyaCloudApi $api
      * @param Integer $value : Valeur de la température
      * @return Array
      */
-    public function setTemperature(TuyaCloudApi $api, $value)
+    public function setTemperature($value)
     {
-        return $api->controlDevice($this->id, 'colorTemperatureSet', array('value' => $value));
+        return $this->control('colorTemperatureSet', array('value' => $value));
     }
     
 }

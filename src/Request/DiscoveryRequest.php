@@ -100,7 +100,7 @@ class DiscoveryRequest extends Request implements RequestInterface
 
         $result = array();
         foreach ($this->response['payload']['devices'] as $datas) {
-            $result[] = DeviceFactory::createDeviceFromDatas($datas);
+            $result[] = DeviceFactory::createDeviceFromDatas($this->session, $datas);
         }
 
         return $result;

@@ -8,7 +8,7 @@
  */
 namespace Sabinus\TuyaCloudApi\Device;
 
-use Sabinus\TuyaCloudApi\TuyaCloudApi;
+use Sabinus\TuyaCloudApi\Session\Session;
 
 
 class CoverDevice extends Device implements DeviceInterface
@@ -17,9 +17,9 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Constructeur
      */
-    public function __construct($id, $name = '', $icon = '')
+    public function __construct(Session $session, $id, $name = '', $icon = '')
     {
-        parent::__construct($id, $name, $icon);
+        parent::__construct($session, $id, $name, $icon);
         $this->type = DeviceFactory::TUYA_COVER;
     }
 
@@ -59,12 +59,11 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Ouvre le volet
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
-    public function open(TuyaCloudApi $api)
+    public function open()
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 1));
+        return $this->control('turnOnOff', array('value' => 1));
     }
 
 
@@ -81,12 +80,11 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Ferme le volet
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
-    public function close(TuyaCloudApi $api)
+    public function close()
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 0));
+        return $this->control('turnOnOff', array('value' => 0));
     }
 
 
@@ -103,12 +101,11 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Stoppe le volet
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
-    public function stop(TuyaCloudApi $api)
+    public function stop()
     {
-        return $api->controlDevice($this->id, 'startStop', array('value' => 0));
+        return $this->control('startStop', array('value' => 0));
     }
     
 }

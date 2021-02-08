@@ -9,7 +9,7 @@
 
 namespace Sabinus\TuyaCloudApi\Device;
 
-use Sabinus\TuyaCloudApi\TuyaCloudApi;
+use Sabinus\TuyaCloudApi\Session\Session;
 
 
 class SwitchDevice extends Device implements DeviceInterface
@@ -18,9 +18,9 @@ class SwitchDevice extends Device implements DeviceInterface
     /**
      * Constructeur
      */
-    public function __construct($id, $name = '', $icon = '')
+    public function __construct(Session $session, $id, $name = '', $icon = '')
     {
-        parent::__construct($id, $name, $icon);
+        parent::__construct($session, $id, $name, $icon);
         $this->type = DeviceFactory::TUYA_SWITCH;
     }
 
@@ -49,12 +49,11 @@ class SwitchDevice extends Device implements DeviceInterface
     /**
      * Allume la prise
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
     public function turnOn(TuyaCloudApi $api)
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 1));
+        return $this->control('turnOnOff', array('value' => 1));
     }
 
 
@@ -71,12 +70,11 @@ class SwitchDevice extends Device implements DeviceInterface
     /**
      * Eteins la prise
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
     public function turnOff(TuyaCloudApi $api)
     {
-        return $api->controlDevice($this->id, 'turnOnOff', array('value' => 0));
+        return $this->control('turnOnOff', array('value' => 0));
     }
     
 }
