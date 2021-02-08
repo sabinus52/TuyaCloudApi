@@ -11,7 +11,6 @@ namespace Sabinus\TuyaCloudApi;
 
 use Sabinus\TuyaCloudApi\Session\Session;
 use Sabinus\TuyaCloudApi\Device\Device;
-use Sabinus\TuyaCloudApi\Device\DeviceEvent;
 use Sabinus\TuyaCloudApi\Request\DiscoveryRequest;
 use Sabinus\TuyaCloudApi\Request\ControlRequest;
 use Sabinus\TuyaCloudApi\Request\QueryRequest;
@@ -125,28 +124,6 @@ class TuyaCloudApi
         $query = new QueryRequest($this->session);
         $query->request('QueryDevice', $payload);
         return $query;
-    }
-
-
-    /**
-     * Envoi un évènement de controle de l'équipement
-     * 
-     * @param DeviceEvent $event     : Objet de l'évènement à effectuer sur l'équipement
-     * @param String      $namespace : Espace de nom
-     * @return Array
-     */
-    public function sendEvent(DeviceEvent $event, $namespace = 'control')
-    {
-        switch ($namespace) {
-            case 'query' :
-                $req = new QueryRequest($this->session);
-                break;
-            case 'control' :
-            default :
-                $req = new ControlRequest($this->session);
-                break;
-        }
-        return $req->request($event->getAction(), $namespace, $event->getPayload());
     }
 
 }

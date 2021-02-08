@@ -182,16 +182,6 @@ class ClimateDevice extends Device implements DeviceInterface
     /**
      * Allume le climatiseur
      * 
-     * @return DeviceEvent
-     */
-    public function getTurnOnEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 1));
-    }
-
-    /**
-     * Allume le climatiseur
-     * 
      * @return Array
      */
     public function turnOn()
@@ -203,16 +193,6 @@ class ClimateDevice extends Device implements DeviceInterface
     /**
      * Eteins le climatiseur
      * 
-     * @return DeviceEvent
-     */
-    public function getTurnOffEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 0));
-    }
-
-    /**
-     * Eteins le climatiseur
-     * 
      * @return Array
      */
     public function turnOff()
@@ -220,17 +200,6 @@ class ClimateDevice extends Device implements DeviceInterface
         return $this->control('turnOnOff', array('value' => 0));
     }
 
-
-    /**
-     * Affecte la température du climatiseur
-     * 
-     * @param Integer $value : Valeur de la température
-     * @return DeviceEvent
-     */
-    public function getSetThermostatEvent($value)
-    {
-        return new DeviceEvent($this, 'temperatureSet', array('value' => $this->generateThermostat($value)));
-    }
 
     /**
      * Affecte la température du climatiseur
@@ -248,17 +217,6 @@ class ClimateDevice extends Device implements DeviceInterface
      * Affecte la vitesse du climatiseur
      * 
      * @param Integer $value : Valeur de la vitesse
-     * @return DeviceEvent
-     */
-    public function getSetSpeedWindEvent($value)
-    {
-        return new DeviceEvent($this, 'windSpeedSet', array('value' => $value));
-    }
-
-    /**
-     * Affecte la vitesse du climatiseur
-     * 
-     * @param Integer $value : Valeur de la vitesse
      * @return Array
      */
     public function setSpeedWind($value)
@@ -266,17 +224,6 @@ class ClimateDevice extends Device implements DeviceInterface
         return $this->control('windSpeedSet', array('value' => $value));
     }
 
-
-    /**
-     * Affecte le mode du climatiseur
-     * 
-     * @param Integer $value : Valeur du mode
-     * @return DeviceEvent
-     */
-    public function getSetModeEvent($value)
-    {
-        return new DeviceEvent($this, 'modeSet', array('value' => $value));
-    }
 
     /**
      * Affecte le mode du climatiseur

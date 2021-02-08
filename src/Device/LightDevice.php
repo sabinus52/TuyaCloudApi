@@ -122,16 +122,6 @@ class LightDevice extends Device implements DeviceInterface
     /**
      * Allume la lampe
      * 
-     * @return DeviceEvent
-     */
-    public function getTurnOnEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 1));
-    }
-
-    /**
-     * Allume la lampe
-     * 
      * @return Array
      */
     public function turnOn()
@@ -139,16 +129,6 @@ class LightDevice extends Device implements DeviceInterface
         return $this->control('turnOnOff', array('value' => 1));
     }
 
-
-    /**
-     * Eteins la lampe
-     * 
-     * @return DeviceEvent
-     */
-    public function getTurnOffEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 0));
-    }
 
     /**
      * Eteins la lampe
@@ -165,17 +145,6 @@ class LightDevice extends Device implements DeviceInterface
      * Affecte la luminosité
      * 
      * @param Integer $value : Valeur de la luminosité en pourcentage (%)
-     * @return DeviceEvent
-     */
-    public function getSetBrightnessEvent($value)
-    {
-        return new DeviceEvent($this, 'brightnessSet', array('value' => $value));
-    }
-
-    /**
-     * Affecte la luminosité
-     * 
-     * @param Integer $value : Valeur de la luminosité en pourcentage (%)
      * @return Array
      */
     public function setBrightness($value)
@@ -183,24 +152,6 @@ class LightDevice extends Device implements DeviceInterface
         return $this->control('brightnessSet', array('value' => $value));
     }
 
-
-    /**
-     * Affecte une couleur
-     * 
-     * @param Integer $color
-     * @param Integer $saturation : Saturation en pourcentage (%)
-     * @param Integer $brightness : Luminosité en pourcentage (%)
-     * @return DeviceEvent
-     */
-    public function getSetColorEvent($color, $saturation, $brightness = 0)
-    {
-        $hsv = array();
-        $hsv['hue'] = $color;
-        $hsv['saturation'] = round($saturation * 255 / 100); // 0-255
-        $hsv['brightness'] = $brightness; // N'a pas l'air de fonctionner mais obligatoire
-        if ($saturation == 0) $hsv['hue'] = 0;
-        return new DeviceEvent($this, 'colorSet', array('color' => $hsv));
-    }
 
     /**
      * Affecte une couleur
@@ -219,17 +170,6 @@ class LightDevice extends Device implements DeviceInterface
         return $this->control('colorSet', array('color' => $hsv));
     }
 
-
-    /**
-     * Affecte la température de la lumière
-     * 
-     * @param Integer $value : Valeur de la température
-     * @return DeviceEvent
-     */
-    public function getSetTemperatureEvent($value)
-    {
-        return new DeviceEvent($this, 'colorTemperatureSet', array('value' => $value));
-    }
 
     /**
      * Affecte la température de la lumière

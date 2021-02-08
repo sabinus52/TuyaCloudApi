@@ -39,16 +39,6 @@ class SwitchDevice extends Device implements DeviceInterface
     /**
      * Allume la prise
      * 
-     * @return DeviceEvent
-     */
-    public function getTurnOnEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 1));
-    }
-
-    /**
-     * Allume la prise
-     * 
      * @return Array
      */
     public function turnOn(TuyaCloudApi $api)
@@ -56,16 +46,6 @@ class SwitchDevice extends Device implements DeviceInterface
         return $this->control('turnOnOff', array('value' => 1));
     }
 
-
-    /**
-     * Eteins la prise
-     * 
-     * @return DeviceEvent
-     */
-    public function getTurnOffEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 0));
-    }
 
     /**
      * Eteins la prise

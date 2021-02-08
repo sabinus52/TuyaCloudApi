@@ -49,16 +49,6 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Ouvre le volet
      * 
-     * @return DeviceEvent
-     */
-    public function getOpenEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 1));
-    }
-
-    /**
-     * Ouvre le volet
-     * 
      * @return Array
      */
     public function open()
@@ -70,16 +60,6 @@ class CoverDevice extends Device implements DeviceInterface
     /**
      * Ferme le volet
      * 
-     * @return DeviceEvent
-     */
-    public function getCloseEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 0));
-    }
-
-    /**
-     * Ferme le volet
-     * 
      * @return Array
      */
     public function close()
@@ -87,16 +67,6 @@ class CoverDevice extends Device implements DeviceInterface
         return $this->control('turnOnOff', array('value' => 0));
     }
 
-
-    /**
-     * Stoppe le volet
-     * 
-     * @return DeviceEvent
-     */
-    public function getStopEvent()
-    {
-        return new DeviceEvent($this, 'startStop', array('value' => 0));
-    }
 
     /**
      * Stoppe le volet

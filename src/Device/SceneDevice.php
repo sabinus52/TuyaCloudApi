@@ -39,16 +39,6 @@ class SceneDevice extends Device implements DeviceInterface
     /**
      * Active la scène
      * 
-     * @return DeviceEvent
-     */
-    public function getActivateEvent()
-    {
-        return new DeviceEvent($this, 'turnOnOff', array('value' => 1));
-    }
-
-    /**
-     * Active la scène
-     * 
      * @return Array
      */
     public function activate()
