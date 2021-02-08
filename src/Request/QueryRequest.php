@@ -58,7 +58,10 @@ class QueryRequest extends Request implements RequestInterface
     {
         // Si mode découverte limité à une seule intérrogation toutes les X minutes
         $this->response = $this->queryPool->fetchFromCache(self::CACHE_DELAY);
-        if ( $this->response != null ) return $this->response;
+        if ( $this->response != null ) {
+            $this->response = null; // Mets à null car cache et valeur non cohérente
+            return parent::RETURN_INCACHE;
+        }
 
         // Sinon fait la requête au Cloud
         parent::_request($action, $this->namespace, $payload);
@@ -66,7 +69,7 @@ class QueryRequest extends Request implements RequestInterface
         // Sauvegarde dans le cache
         $this->queryPool->storeInCache($this->response);
 
-        return $this->response;
+        return ( $this->isSuccess() ) ? parent::RETURN_SUCCESS : parent::RETURN_ERROR;
     }
 
 

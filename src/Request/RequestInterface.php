@@ -27,6 +27,7 @@ interface RequestInterface
      * 
      * @param String $action    : Valeur de l'action à effectuer
      * @param Array  $payload   : Données à envoyer
+     * @return Integer : code de retour
      */
     public function request($action, array $payload = []);
 

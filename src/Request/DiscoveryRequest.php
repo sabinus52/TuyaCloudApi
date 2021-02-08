@@ -40,6 +40,12 @@ class DiscoveryRequest extends Request implements RequestInterface
      */
     private $discoveryPool;
 
+    /**
+     * Si resultat venant du cache
+     * 
+     * @var Integer
+     */
+    private $isCache;
 
     
 
@@ -51,25 +57,33 @@ class DiscoveryRequest extends Request implements RequestInterface
     public function __construct(Session $session)
     {
         $this->discoveryPool = new CachePool(self::CACHE_FILE);
+        $this->isCache = true;
         $this->namespace = self::NAMESPACE;
         parent::__construct($session);
     }
 
 
+    /**
+     * Requête au Cloud Tuya
+     * 
+     * @param String $action    : Valeur de l'action à effectuer
+     * @param Array  $payload   : Données à envoyer
+     * @return Integer : code de retour
+     */
     public function request($action = 'Discovery', array $payload = [])
     {
         // Si mode découverte limité à une seule intérrogation toutes les X minutes
         $this->response = $this->discoveryPool->fetchFromCache(self::CACHE_DELAY);
-        if ( $this->response != null ) return $this->response;
+        if ( $this->response != null ) return parent::RETURN_INCACHE;
 
         // Sinon fait la requête au Cloud
         parent::_request($action, $this->namespace, $payload);
-        parent::request($action, $namespace, $payload);
+        $this->isCache = false;
 
         // Sauvegarde dans le cache
         $this->discoveryPool->storeInCache($this->response);
 
-        return $this->response;
+        return ( $this->isSuccess() ) ? parent::RETURN_SUCCESS : parent::RETURN_ERROR;
     }
 
 
@@ -90,6 +104,17 @@ class DiscoveryRequest extends Request implements RequestInterface
         }
 
         return $result;
+    }
+
+
+    /**
+     * Si le résultat de la requête provient du cache
+     * 
+     * @return Boolean
+     */
+    public function isResultInCache()
+    {
+        return $this->isCache;
     }
 
 }

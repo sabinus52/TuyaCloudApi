@@ -35,6 +35,8 @@ class ControlRequest extends Request implements RequestInterface
     public function request($action, array $payload = [])
     {
         parent::_request($action, $this->namespace, $payload);
+
+        return ( $this->isSuccess() ) ? parent::RETURN_SUCCESS : parent::RETURN_ERROR;
     }
 
 }

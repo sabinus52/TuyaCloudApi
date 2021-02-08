@@ -17,6 +17,16 @@ abstract class Request
 {
 
     /**
+     * Code de retour et d'erreur
+     */
+    const RETURN_SUCCESS = 0;  // Succès de le requête
+    const RETURN_INCACHE = 1;  // Resultat récupéré dans le cache
+    const RETURN_ERROR   = 9;  // Error de la requête
+    const ERROR_NODATA   = 90; // Pas de retour de données
+    const ERROR_STATUS   = 91; // Erreur générique
+    const ERROR_INVOKE   = 92; // Erreur trop de requêtes fréquentes
+   
+    /**
      * @var Session
      */
     protected $session;
@@ -42,6 +52,28 @@ abstract class Request
     public function __construct(Session $session)
     {
         $this->session = $session;
+    }
+
+
+    /**
+     * Si la requête est un succès ou pas
+     * 
+     * @return Boolean
+     */
+    public function isSuccess()
+    {
+        return ( isset($this->response['header']['code']) && $this->response['header']['code'] == 'SUCCESS' ) ? true : false;
+    }
+
+
+    /**
+     * Retourne la réponse de la requête
+     * 
+     * @return Array
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 
 
@@ -86,15 +118,15 @@ abstract class Request
     private function checkResponse($message = null)
     {
         if ( empty($this->response) ) {
-            throw new \Exception($message.' : Datas return null');
+            throw new \Exception($message.' : Datas return null', self::ERROR_NODATA);
         }
         if ( isset($this->response['responseStatus']) && $this->response['responseStatus'] === 'error' ) {
             $message = isset($this->response['errorMsg']) ? $this->response['errorMsg'] : $message;
-            throw new \Exception($message);
+            throw new \Exception($message, self::ERROR_STATUS);
         }
         if ( isset($this->response['header']['code']) && $this->response['header']['code'] == 'FrequentlyInvoke' ) {
             $message = isset($this->response['header']['msg']) ? $this->response['header']['msg'] : $message;
-            throw new \Exception($message);
+            throw new \Exception($message, self::ERROR_INVOKE);
         }
     }
 
