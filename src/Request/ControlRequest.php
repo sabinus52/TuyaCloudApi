@@ -9,13 +9,32 @@
 
 namespace Sabinus\TuyaCloudApi\Request;
 
+use Sabinus\TuyaCloudApi\Session\Session;
+
 
 class ControlRequest extends Request implements RequestInterface
 {
+    /**
+     * NameSpace de le requête
+     */
+    const NAMESPACE = 'control';
 
-    public function request($action, $namespace = 'control', array $payload = [])
+
+    /**
+     * Contructeur
+     * 
+     * @param Session $session
+     */
+    public function __construct(Session $session)
     {
-        parent::request($action, $namespace, $payload);
+        $this->namespace = self::NAMESPACE;
+        parent::__construct($session);
+    }
+
+
+    public function request($action, array $payload = [])
+    {
+        parent::_request($action, $this->namespace, $payload);
     }
 
 }

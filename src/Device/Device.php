@@ -140,10 +140,13 @@ abstract class Device
      */
     public function update(TuyaCloudApi $api)
     {
-        sleep(1);
-        $response = $api->controlDevice($this->id, 'QueryDevice', array(), 'query');
-        if (isset($response['payload']['data'])) $this->setData($response['payload']['data']);
-        return true;
+        $query = $api->getQueryDevice($this->id);
+        if ( $query->getDatas() != null ) {
+            $this->setData($query->getDatas());
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

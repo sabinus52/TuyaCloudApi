@@ -15,7 +15,7 @@ use GuzzleHttp\Psr7\Uri;
 
 abstract class Request
 {
-   
+
     /**
      * @var Session
      */
@@ -26,6 +26,11 @@ abstract class Request
      * @var Array
      */
     protected $response;
+
+    /**
+     * Namespace de le requête
+     */
+    protected $namespace;
 
 
 
@@ -43,12 +48,12 @@ abstract class Request
     /**
      * Effectue une requête HTTP dans le Cloud Tuya
      * 
-     * @param String $name      : Valeur de l'action à effectuer
+     * @param String $action      : Valeur de l'action à effectuer
      * @param String $namespace : Espace de nom
      * @param Array  $payload   : Données à envoyer
      * @return Array
      */
-    protected function request($name, $namespace, array $payload = [])
+    protected function _request($action, $namespace, array $payload = [])
     {
         $token = $this->session->getToken();
         if (!$token) return null;
@@ -56,7 +61,7 @@ abstract class Request
         $this->response = $this->session->getClient()->post(new Uri('/homeassistant/skill'), array(
             'json' => array(
                 'header' => array(
-                    'name'           => $name,
+                    'name'           => $action,
                     'namespace'      => $namespace,
                     'payloadVersion' => 1,
                 ),
@@ -66,7 +71,7 @@ abstract class Request
             ),
         ));
         $this->response = json_decode((string) $this->response->getBody(), true);
-        $this->checkResponse(sprintf('Failed to get "%s" response from Cloud Tuya', $name));
+        $this->checkResponse(sprintf('Failed to get "%s" response from Cloud Tuya', $action));
 
         return $this->response;
     }
@@ -78,7 +83,7 @@ abstract class Request
      * @param String $message : Message par défaut
      * @throws Exception
      */
-    protected function checkResponse($message = null)
+    private function checkResponse($message = null)
     {
         if ( empty($this->response) ) {
             throw new \Exception($message.' : Datas return null');

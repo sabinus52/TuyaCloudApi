@@ -14,7 +14,12 @@ use Sabinus\TuyaCloudApi\Tools\CachePool;
 
 
 class QueryRequest extends Request implements RequestInterface
-{
+{    
+
+    /**
+     * NameSpace de le requête
+     */
+    const NAMESPACE = 'query';
 
     /**
      * Délai entre 2 requêtes de query (restriction Tuya)
@@ -44,18 +49,19 @@ class QueryRequest extends Request implements RequestInterface
     public function __construct(Session $session)
     {
         $this->queryPool = new CachePool(self::CACHE_FILE);
+        $this->namespace = self::NAMESPACE;
         parent::__construct($session);
     }
 
 
-    public function request($action = 'QueryDevice', $namespace = 'query', array $payload = [])
+    public function request($action = 'QueryDevice', array $payload = [])
     {
         // Si mode découverte limité à une seule intérrogation toutes les X minutes
         $this->response = $this->queryPool->fetchFromCache(self::CACHE_DELAY);
         if ( $this->response != null ) return $this->response;
 
         // Sinon fait la requête au Cloud
-        parent::request($action, $namespace, $payload);
+        parent::_request($action, $this->namespace, $payload);
 
         // Sauvegarde dans le cache
         $this->queryPool->storeInCache($this->response);

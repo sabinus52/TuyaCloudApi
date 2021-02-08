@@ -16,6 +16,11 @@ use Sabinus\TuyaCloudApi\Device\DeviceFactory;
 
 class DiscoveryRequest extends Request implements RequestInterface
 {
+
+    /**
+     * NameSpace de le requête
+     */
+    const NAMESPACE = 'discovery';
    
     /**
      * Délai entre 2 requêtes de découverte (restriction Tuya)
@@ -35,6 +40,7 @@ class DiscoveryRequest extends Request implements RequestInterface
      */
     private $discoveryPool;
 
+
     
 
     /**
@@ -45,17 +51,19 @@ class DiscoveryRequest extends Request implements RequestInterface
     public function __construct(Session $session)
     {
         $this->discoveryPool = new CachePool(self::CACHE_FILE);
+        $this->namespace = self::NAMESPACE;
         parent::__construct($session);
     }
 
 
-    public function request($action = 'Discovery', $namespace = 'discovery', array $payload = [])
+    public function request($action = 'Discovery', array $payload = [])
     {
         // Si mode découverte limité à une seule intérrogation toutes les X minutes
         $this->response = $this->discoveryPool->fetchFromCache(self::CACHE_DELAY);
         if ( $this->response != null ) return $this->response;
 
         // Sinon fait la requête au Cloud
+        parent::_request($action, $this->namespace, $payload);
         parent::request($action, $namespace, $payload);
 
         // Sauvegarde dans le cache

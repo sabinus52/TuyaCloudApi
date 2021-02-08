@@ -109,7 +109,7 @@ class TuyaCloudApi
                 break;
         }
 
-        return $req->request($action, $namespace, $payload);
+        return $req->request($action, $payload);
     }
 
 
@@ -123,7 +123,7 @@ class TuyaCloudApi
     {
         $payload['devId'] = $id;
         $query = new QueryRequest($this->session);
-        $query->request('QueryDevice', 'query', $payload);
+        $query->request('QueryDevice', $payload);
         return $query;
     }
 
