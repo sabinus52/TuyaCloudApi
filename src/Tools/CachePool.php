@@ -52,6 +52,17 @@ class CachePool
 
 
     /**
+     * Change le nom du fichier
+     * 
+     * @param String $filename
+     */
+    public function setFileName($filename)
+    {
+        $this->filename = $filename;
+    }
+
+
+    /**
      * Retourne la valeur de l'objet sauvegardé depuis le système de fichier
      * 
      * @param Integer $ttl : Délai de conservation

@@ -41,4 +41,20 @@ class CachePoolTest extends TestCase
         $this->assertSame(null, $pool->fetchFromCache());
     }
 
+
+    public function testStoreOtherFileNameCache()
+    {
+        $pool = new CachePool('cachepool.test');
+        $pool->clearFromCache();
+        $pool->storeInCache([1,2,3]);
+        $this->assertSame([1,2,3], $pool->fetchFromCache(10));
+        $pool->setFileName('cachepool.test2');
+        $this->assertSame(null, $pool->fetchFromCache(10));
+        $pool->storeInCache([4,5,6]);
+        $this->assertSame([4,5,6], $pool->fetchFromCache(10));
+        $pool->clearFromCache();
+        $pool->setFileName('cachepool.test');
+        $this->assertSame([1,2,3], $pool->fetchFromCache(10));
+    }
+
 }

@@ -152,6 +152,7 @@ abstract class Device
     {
         $payload['devId'] = $this->id;
         $query = new QueryRequest($this->session);
+        $query->setDeviceID($this->id);
         $result = $query->request('QueryDevice', $payload);
 
         if ( $query->getDatas() != null ) $this->setData($query->getDatas());
