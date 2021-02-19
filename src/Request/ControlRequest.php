@@ -32,6 +32,13 @@ class ControlRequest extends Request implements RequestInterface
     }
 
 
+    /**
+     * Requête au Cloud Tuya
+     * 
+     * @param String $action    : Valeur de l'action à effectuer
+     * @param Array  $payload   : Données à envoyer
+     * @return Integer : code de retour
+     */
     public function request($action, array $payload = [])
     {
         parent::_request($action, $this->namespace, $payload);

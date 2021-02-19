@@ -117,6 +117,7 @@ abstract class Request
      */
     private function checkResponse($message = null)
     {
+       // print_r($this->response); // FIXME
         if ( empty($this->response) ) {
             throw new \Exception($message.' : Datas return null', self::ERROR_NODATA);
         }

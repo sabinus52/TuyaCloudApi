@@ -50,7 +50,6 @@ class SceneDevice extends Device implements DeviceInterface
     /**
      * Mise à jour des données de l'équipement
      * 
-     * @param TuyaCloudApi $api
      * @return Array
      */
     public function update()
