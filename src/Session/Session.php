@@ -208,6 +208,25 @@ class Session
 
 
     /**
+     * Vérifie si pas d'erreur dans le retour de la requête
+     * 
+     * @param Array $response : Réponse de la requete http
+     * @param String $message : Message par défaut
+     * @throws Exception
+     */
+    public function checkResponse($response, $message = null)
+    {
+        if ( empty($response) ) {
+            throw new \Exception($message.' : Datas return null');
+        }
+        if ( isset($response['responseStatus']) && $response['responseStatus'] === 'error' ) {
+            $message = isset($response['errorMsg']) ? $response['errorMsg'] : $message;
+            throw new \Exception($message);
+        }
+    }
+
+
+    /**
      * Change le dossier de sauvegarde du token
      * 
      * @param String $folder

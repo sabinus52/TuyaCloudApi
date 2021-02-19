@@ -80,27 +80,29 @@ class DeviceFactory
     /**
      * Créer l'objet vierge de l'équipement à partir de son ID et son type
      * 
+     * @param Session $session
      * @param String $id   : Identifiant de l'équipement
      * @param String $type : Type de l'équipement
+     * @param String $name : Nom de l'équipement
      * @return Device
      */
-    static public function createDeviceFromId($id, $type)
+    static public function createDeviceFromId(Session $session, $id, $type, $name = null)
     {
         switch ($type) {
             case self::TUYA_SWITCH :
-                $device = new SwitchDevice($id);
+                $device = new SwitchDevice($session, $id);
                 break;
             case self::TUYA_LIGHT :
-                $device = new LightDevice($id);
+                $device = new LightDevice($session, $id);
                 break;
             case self::TUYA_COVER :
-                $device = new CoverDevice($id);
+                $device = new CoverDevice($session, $id);
                 break;
             case self::TUYA_SCENE :
-                $device = new SceneDevice($id);
+                $device = new SceneDevice($session, $id);
                 break;
             case self::TUYA_CLIMATE :
-                $device = new ClimateDevice($id);
+                $device = new ClimateDevice($session, $id);
                 break;
             default:
                 return null;
