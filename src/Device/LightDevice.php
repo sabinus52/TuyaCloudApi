@@ -10,6 +10,7 @@
 namespace Sabinus\TuyaCloudApi\Device;
 
 use Sabinus\TuyaCloudApi\Session\Session;
+use Sabinus\TuyaCloudApi\Request\Request;
 
 
 class LightDevice extends Device implements DeviceInterface
@@ -35,6 +36,16 @@ class LightDevice extends Device implements DeviceInterface
         return $this->data['state'];
     }
 
+    /**
+     * Affecte le statut de la lamps
+     * 
+     * @param Boolean
+     */
+    public function setState($state)
+    {
+        $this->data['state'] = $state;
+    }
+
 
     /**
      * Retourne la luminosité de la lampe en pourcentage (%)
@@ -43,10 +54,7 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function getBrightness()
     {
-        if ($this->data['color_mode'] == 'colour')
-            return $this->data['color']['brightness'];
-        else
-            return round($this->data['brightness'] / 255 * 100);
+        return round($this->data['brightness'] / 255 * 100);
     }
 
 
@@ -73,10 +81,10 @@ class LightDevice extends Device implements DeviceInterface
     {
         if ( !$this->getSupportColor() )
             return null;
-        elseif ( $this->data['color_mode'] == 'colour' )
+        elseif ( isset($this->data['color']['hue']) )
             return $this->data['color']['hue'];
         else
-            return 0;
+            return null;
     }
 
 
@@ -89,10 +97,10 @@ class LightDevice extends Device implements DeviceInterface
     {
         if ( !$this->getSupportColor() )
             return null;
-        elseif ( $this->data['color_mode'] == 'colour' )
+        elseif ( isset($this->data['color']['saturation']) )
             return $this->data['color']['saturation'];
         else
-            return 0;
+            return null;
     }
     public function getSaturation() { return $this->getColorSaturation(); }
 
@@ -104,7 +112,7 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function getSupportColor()
     {
-        return (isset($this->data['color'])) ? true : false;
+        return ($this->data['color_mode'] == 'colour') ? true : false;
     }
 
 
@@ -126,7 +134,9 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function turnOn()
     {
-        return $this->control('turnOnOff', array('value' => 1));
+        $result = $this->control('turnOnOff', array('value' => 1));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(true);
+        return $result;
     }
 
 
@@ -137,7 +147,9 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function turnOff()
     {
-        return $this->control('turnOnOff', array('value' => 0));
+        $result = $this->control('turnOnOff', array('value' => 0));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(false);
+        return $result;
     }
 
     
@@ -149,7 +161,9 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function setBrightness($value)
     {
-        return $this->control('brightnessSet', array('value' => $value));
+        $result = $this->control('brightnessSet', array('value' => $value));
+        if ($result == Request::RETURN_SUCCESS) $this->data['brightness'] = round($value * 2.55);
+        return $result;
     }
 
 
@@ -179,7 +193,9 @@ class LightDevice extends Device implements DeviceInterface
      */
     public function setTemperature($value)
     {
-        return $this->control('colorTemperatureSet', array('value' => $value));
+        $result = $this->control('colorTemperatureSet', array('value' => $value));
+        if ($result == Request::RETURN_SUCCESS) $this->data['color_temp'] = $value;
+        return $result;
     }
     
 }

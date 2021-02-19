@@ -10,6 +10,7 @@
 namespace Sabinus\TuyaCloudApi\Device;
 
 use Sabinus\TuyaCloudApi\Session\Session;
+use Sabinus\TuyaCloudApi\Request\Request;
 
 
 class SwitchDevice extends Device implements DeviceInterface
@@ -35,15 +36,28 @@ class SwitchDevice extends Device implements DeviceInterface
         return $this->data['state'];
     }
 
+
+    /**
+     * Affecte le statut de la prise
+     * 
+     * @param Boolean
+     */
+    public function setState($state)
+    {
+        $this->data['state'] = $state;
+    }
+
     
     /**
      * Allume la prise
      * 
      * @return Array
      */
-    public function turnOn(TuyaCloudApi $api)
+    public function turnOn()
     {
-        return $this->control('turnOnOff', array('value' => 1));
+        $result = $this->control('turnOnOff', array('value' => 1));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(true);
+        return $result;
     }
 
 
@@ -52,9 +66,11 @@ class SwitchDevice extends Device implements DeviceInterface
      * 
      * @return Array
      */
-    public function turnOff(TuyaCloudApi $api)
+    public function turnOff()
     {
-        return $this->control('turnOnOff', array('value' => 0));
+        $result = $this->control('turnOnOff', array('value' => 0));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(false);
+        return $result;
     }
     
 }

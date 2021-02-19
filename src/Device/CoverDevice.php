@@ -9,6 +9,7 @@
 namespace Sabinus\TuyaCloudApi\Device;
 
 use Sabinus\TuyaCloudApi\Session\Session;
+use Sabinus\TuyaCloudApi\Request\Request;
 
 
 class CoverDevice extends Device implements DeviceInterface
@@ -47,13 +48,26 @@ class CoverDevice extends Device implements DeviceInterface
 
 
     /**
+     * Affecte le statut de la prise
+     * 
+     * @param Integer
+     */
+    public function setState($state)
+    {
+        $this->data['state'] = $state;
+    }
+
+
+    /**
      * Ouvre le volet
      * 
      * @return Array
      */
     public function open()
     {
-        return $this->control('turnOnOff', array('value' => 1));
+        $result = $this->control('turnOnOff', array('value' => 1));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(1);
+        return $result;
     }
 
 
@@ -64,7 +78,9 @@ class CoverDevice extends Device implements DeviceInterface
      */
     public function close()
     {
-        return $this->control('turnOnOff', array('value' => 0));
+        $result = $this->control('turnOnOff', array('value' => 0));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(2);
+        return $result;
     }
 
 
@@ -75,7 +91,9 @@ class CoverDevice extends Device implements DeviceInterface
      */
     public function stop()
     {
-        return $this->control('startStop', array('value' => 0));
+        $result = $this->control('startStop', array('value' => 0));
+        if ($result == Request::RETURN_SUCCESS) $this->setState(3);
+        return $result;
     }
     
 }

@@ -10,6 +10,7 @@
 namespace Sabinus\TuyaCloudApi\Device;
 
 use Sabinus\TuyaCloudApi\Session\Session;
+use Sabinus\TuyaCloudApi\Request\Request;
 
 
 class ClimateDevice extends Device implements DeviceInterface
@@ -68,7 +69,7 @@ class ClimateDevice extends Device implements DeviceInterface
      */
     public function getTemperature()
     {
-        if ( ! isset($this->data['current_temperature']) ) return null;
+        if ( ! $this->getSupportTemperature() ) return null;
         return $this->parseTemperature($this->data['current_temperature']);
     }
 
@@ -143,6 +144,17 @@ class ClimateDevice extends Device implements DeviceInterface
     public function isUnitFahrenheit()
     {
         return ( strtolower($this->getUnitTemperature()) == self::FAHRENHEIT );
+    }
+
+
+    /**
+     * Retourne si le climatiseur supporte le retour de la température courante
+     * 
+     * @return Boolean
+     */
+    public function getSupportTemperature()
+    {
+        return (isset($this->data['current_temperature'])) ? true : false;
     }
 
 
