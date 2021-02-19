@@ -78,6 +78,15 @@ abstract class Device
 
 
     /**
+     * Affecte le nom de l'objet
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+    /**
      * Affecte les données supplémentaires de l'équipement
      * 
      * @param Array $data
@@ -140,6 +149,26 @@ abstract class Device
     public function isOnline()
     {
         return $this->data['online'];
+    }
+
+
+    /**
+     * Retourne les données de l'équipement
+     * 
+     * @return Array
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+
+    /**
+     * @return String
+     */
+    public function __toString()
+    {
+        return $this->getId().' ('.$this->getType().') : '.$this->getName().' '.print_r($this->getData(), true);
     }
 
 

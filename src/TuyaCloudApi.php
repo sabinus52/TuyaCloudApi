@@ -37,6 +37,18 @@ class TuyaCloudApi
     public function __construct(Session $session)
     {
         $this->session = $session;
+        $this->devices = [];
+    }
+
+
+    /**
+     * Retourne la session
+     * 
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 
 

@@ -106,6 +106,7 @@ class DeviceFactory
                 return null;
                 break;
         }
+        $device->setName($name);
         return $device;
     }
 
