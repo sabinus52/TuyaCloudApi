@@ -12,9 +12,9 @@
         }
     ],
     "require": {
-        "php": "^5.2||^7",
-        "guzzlehttp/guzzle": "6.5.0",
-        "mexitek/phpcolors": "0.*"
+        "php": "^5.2|^7|^8",
+        "guzzlehttp/guzzle": "^6.5.0|^7.0",
+        "mexitek/phpcolors": "1.*"
     },
     "autoload": {
         "psr-4" : {
