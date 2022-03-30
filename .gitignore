@@ -11,6 +11,8 @@ vendor/
 workspace/
 .project
 *.code-workspace
+env_vars
+DEVELOP*.md
 
 # Test
 *.test.php
