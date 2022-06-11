@@ -2,6 +2,11 @@
 
 ### Version 2.0.1 - 17/01/2022
 
+- Update composer.json for patch guzzlehttp/guzzle : CVE-2022-29248, CVE-2022-31042, CVE-2022-31043
+
+
+### Version 2.0.1 - 17/01/2022
+
 - Increase cache delay for discovery
 
 
